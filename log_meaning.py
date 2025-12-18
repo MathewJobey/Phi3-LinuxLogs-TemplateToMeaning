@@ -52,29 +52,35 @@ def load_model():
 # 3. PROMPT GENERATION
 # ==========================================
 def build_prompt(template):
-    system_instruction = """You are a Linux Log Translator.
+    system_instruction = """You are a Linux Log Template Expander.
+Your goal is to turn a technical log pattern into a natural English sentence structure.
 
-Your task is to convert a Linux log TEMPLATE into ONE clear, professional, and easily understandable human-readable English sentence.
+### VARIABLE DICTIONARY (What the placeholders mean)
+- <TIMESTAMP>: Date/Time of the event.
+- <HOSTNAME>: The server or machine name.
+- <RHOST> / <IP>: Remote IP address (the attacker or connector).
+- <USER> / <USERNAME>: The user account involved.
+- <UID> / <PID>: User ID / Process ID numbers.
+- <STATE>: A event or system status  (e.g. 'opened', failed', 'accepted', 'closed').
 
-### VARIABLE DEFINITIONS
-- <TIMESTAMP>: Date and time when the event occurred
-- <HOSTNAME>: Name of the server where the event occurred
-- <RHOST> / <IP>: Remote host IP address
-- <USERNAME> / <USER>: User account involved
-- <UID>: User ID number (0 usually indicates root/admin)
-- <PID>: Process ID identifying the software program
-- <PORT>: Network port number
-- <STATE>: Action or status of the event  
-  (e.g., session started, session closed, connection opened, connection closed, failed)
+### CORE TASK
+Create a sentence that describes the event while preserving ALL variable placeholders as **fixed data slots**. 
+Do not interpret the variables (e.g., do not change "<STATE>" to "initiated" or "closed"). Treat them as proper nouns that must appear in the final output.
 
-### STRICT RULES (DO NOT VIOLATE)
-1. Rewrite the template only; do not infer or invent any information.
-2. Every placeholder enclosed in < > MUST appear exactly as written in the output.
-3. If the same placeholder appears multiple times in the template, include it only once in the sentence.
-4. Do NOT rename, modify, or merge placeholders.
-5. The sentence must be grammatically correct and flow naturally for all valid <STATE> values.
-6. Produce exactly ONE complete sentence.
-7. Output ONLY the final sentence — no explanations, headings, or formatting."""
+### UNIVERSAL RULES
+1. **Preservation:** Every placeholder inside < > (e.g., <TIMESTAMP>, <PID>, <STATE>) MUST appear in the output exactly as written.
+2. **Grammar:** Structure the sentence so it makes sense regardless of what value fills the placeholder. 
+   - *Bad:* "The session was <STATE>." (grammatically risky if state is 'failure')
+   - *Good:* "The session entered a state of <STATE>." (always works)
+3. **Completeness:** Never summarize. If a template has 5 variables, your sentence must contain 5 variables.
+
+### EXAMPLES
+Input: <TIMESTAMP> <HOSTNAME> su: session <STATE> for user <USER>
+Output: At <TIMESTAMP>, the su process on <HOSTNAME> recorded that the session for user <USER> is now <STATE>.
+
+Input: <TIMESTAMP> <HOSTNAME> sshd[<PID>]: Accepted <METHOD> for <USER> from <IP> port <PORT>
+Output: At <TIMESTAMP>, the sshd process <PID> on <HOSTNAME> accepted <METHOD> authentication for user <USER> connecting from <IP> on port <PORT>.
+"""
     
     # Phi-3 Chat Format Tags
     return f"<|user|>\n{system_instruction}\n\nInput:\n{template}\n<|end|>\n<|assistant|>"
