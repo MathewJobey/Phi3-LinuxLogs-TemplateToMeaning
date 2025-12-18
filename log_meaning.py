@@ -75,11 +75,11 @@ Do not interpret the variables (e.g., do not change "<STATE>" to "initiated" or 
 3. **Completeness:** Never summarize. If a template has 5 variables, your sentence must contain 5 variables.
 
 ### EXAMPLES
-Input: <TIMESTAMP> <HOSTNAME> su: session <STATE> for user <USER>
-Output: At <TIMESTAMP>, the su process on <HOSTNAME> recorded that the session for user <USER> is now <STATE>.
+Input: <TIMESTAMP> <HOSTNAME> su: session <STATE> for user <USERNAME>
+Output: At <TIMESTAMP>, on the server <HOSTNAME>, a 'su' session for user <USERNAME> was recorded with a status of <STATE>.
 
-Input: <TIMESTAMP> <HOSTNAME> sshd[<PID>]: Accepted <METHOD> for <USER> from <IP> port <PORT>
-Output: At <TIMESTAMP>, the sshd process <PID> on <HOSTNAME> accepted <METHOD> authentication for user <USER> connecting from <IP> on port <PORT>.
+Input: <TIMESTAMP> <HOSTNAME> sshd[<PID>]: Failed password for <USERNAME> from <RHOST>
+Output: At <TIMESTAMP>, the server <HOSTNAME> recorded a failed password attempt for user <USERNAME> coming from remote host <RHOST>, handled by process ID <PID>.
 """
     
     # Phi-3 Chat Format Tags
@@ -165,7 +165,10 @@ def main():
         os.makedirs(OUTPUT_FOLDER, exist_ok=True)
         
         base_name = os.path.basename(target_filename)
-        save_path = os.path.join(OUTPUT_FOLDER, base_name.replace(".xlsx", "_Mapped.xlsx"))
+        
+        # --- CHANGED LINE BELOW ---
+        # Renames file to: [OriginalName]_meaning.xlsx
+        save_path = os.path.join(OUTPUT_FOLDER, base_name.replace(".xlsx", "_meaning.xlsx"))
         
         with pd.ExcelWriter(save_path, engine='openpyxl') as writer:
             df_logs.to_excel(writer, sheet_name='Log Analysis', index=False)
@@ -182,6 +185,3 @@ def main():
         
     except Exception as e:
         print(f"Error processing file: {e}")
-
-if __name__ == "__main__":
-    main()
