@@ -1,0 +1,239 @@
+{
+    "report_metadata": {
+        "source_file": "C:\\Users\\Mathe\\Downloads\\Phi3-LinuxLogs-TemplateToMeaning\\outputs\\Linux_2k_clean_analysis_meaning final excel_sorted.xlsx",
+        "total_logs": 1820,
+        "critical_events": 23
+    },
+    "event_timeline": [
+        {
+            "event_id": 1,
+            "status": "ROUTINE",
+            "count": 117,
+            "start_time": "2025-06-14 15:16:01",
+            "end_time": "2025-07-20 23:37:46",
+            "duration": "36 days 08:21:45",
+            "description": "At Jun 14 15:16:01, the server combo logged an authentication failure for user 0, with the process ID 19939, on a non-existent tty, with pam_unix handling the event, for the remote host 218.188.2.4. \n   >>> DETAILS: HOSTNAME: [combo] | Source IPs: 15 unique values",
+            "unique_details": "HOSTNAME: [combo] | Source IPs: 15 unique values"
+        },
+        {
+            "event_id": 2,
+            "status": "ROUTINE",
+            "count": 116,
+            "start_time": "2025-06-14 15:16:02",
+            "end_time": "2025-07-20 23:37:46",
+            "duration": "36 days 08:21:44",
+            "description": "At Jun 14 15:16:02, the server combo executed a check pass operation for user unknown using process ID 19937 from thesshd(pam_unix) service. \n   >>> DETAILS: HOSTNAME: [combo] | Users: [unknown]",
+            "unique_details": "HOSTNAME: [combo] | Users: [unknown]"
+        },
+        {
+            "event_id": 3,
+            "status": "ROUTINE",
+            "count": 372,
+            "start_time": "2025-06-15 02:04:59",
+            "end_time": "2025-07-26 07:04:12",
+            "duration": "41 days 04:59:13",
+            "description": "At Jun 15 02:04:59, the server combo logged an authentication failure for user root, with user ID 0, process ID 20882, and originating from remote host 220-135-151-1.hinet-ip.hinet.net. \n   >>> DETAILS: HOSTNAME: [combo] | Source IPs: 32 unique values | Users: [guest, root, test]",
+            "unique_details": "HOSTNAME: [combo] | Source IPs: 32 unique values | Users: [guest, root, test]"
+        },
+        {
+            "event_id": 4,
+            "status": "ROUTINE",
+            "count": 86,
+            "start_time": "2025-06-15 04:06:18",
+            "end_time": "2025-07-27 04:21:39",
+            "duration": "42 days 00:15:21",
+            "description": "At Jun 15 04:06:18, on the server combo, asu(pam_unix) session for user cyrus was initiated with a status of opened, managed by process ID 21416 and user ID 0. \n   >>> DETAILS: HOSTNAME: [combo] | STATE: [opened] | Users: [cyrus, news]",
+            "unique_details": "HOSTNAME: [combo] | STATE: [opened] | Users: [cyrus, news]"
+        },
+        {
+            "event_id": 5,
+            "status": "ROUTINE",
+            "count": 86,
+            "start_time": "2025-06-15 04:06:19",
+            "end_time": "2025-07-27 04:21:40",
+            "duration": "42 days 00:15:21",
+            "description": "At Jun 15 04:06:19, on the server combo, asu(pam_unix) session for user cyrus was recorded with a status of closed. \n   >>> DETAILS: HOSTNAME: [combo] | STATE: [closed] | Users: [cyrus, news]",
+            "unique_details": "HOSTNAME: [combo] | STATE: [closed] | Users: [cyrus, news]"
+        },
+        {
+            "event_id": 6,
+            "status": "ROUTINE",
+            "count": 292,
+            "start_time": "2025-06-17 07:07:00",
+            "end_time": "2025-07-17 23:21:54",
+            "duration": "30 days 16:14:54",
+            "description": "At Jun 17 07:07:00, the server combo logged a connection from remote host 24.54.76.216, 24-54-76-216.bflony.adelphia.net (24.54.76.216, 24-54-76-216.bflony.adelphia.net) by process ID 29505. \n   >>> DETAILS: HOSTNAME: [combo] | Source IPs: 11 unique values",
+            "unique_details": "HOSTNAME: [combo] | Source IPs: 11 unique values"
+        },
+        {
+            "event_id": 7,
+            "status": "ROUTINE",
+            "count": 36,
+            "start_time": "2025-06-17 20:29:26",
+            "end_time": "2025-07-13 17:22:29",
+            "duration": "25 days 20:53:03",
+            "description": "At Jun 17 20:29:26, the server combo logged a opened session for user test initiated by user ID 509. \n   >>> DETAILS: HOSTNAME: [combo] | STATE: [opened] | Users: [test]",
+            "unique_details": "HOSTNAME: [combo] | STATE: [opened] | Users: [test]"
+        },
+        {
+            "event_id": 8,
+            "status": "ROUTINE",
+            "count": 36,
+            "start_time": "2025-06-17 20:34:57",
+            "end_time": "2025-07-13 17:22:29",
+            "duration": "25 days 20:47:32",
+            "description": "At Jun 17 20:34:57, the server combo logged a closed session for user test under process ID 30631 using the sshd(pam_unix) service. \n   >>> DETAILS: HOSTNAME: [combo] | STATE: [closed] | Users: [test]",
+            "unique_details": "HOSTNAME: [combo] | STATE: [closed] | Users: [test]"
+        },
+        {
+            "event_id": 9,
+            "status": "ROUTINE",
+            "count": 1,
+            "start_time": "2025-06-18 02:23:10",
+            "end_time": "2025-06-18 02:23:10",
+            "duration": "Instant",
+            "description": "At Jun 18 02:23:10, the server combo logged an event where the FTP daemon process with ID 31277 encountered a timeout for a user that was not recognized, after 900 seconds. \n   >>> DETAILS: HOSTNAME: [combo] | NUM: [900]",
+            "unique_details": "HOSTNAME: [combo] | NUM: [900]"
+        },
+        {
+            "event_id": 10,
+            "status": "ROUTINE",
+            "count": 617,
+            "start_time": "2025-06-20 03:40:59",
+            "end_time": "2025-07-27 10:59:53",
+            "duration": "37 days 07:18:54",
+            "description": "At Jun 20 03:40:59, the server combo logged a connection attempt from remote host 222.33.90.199 by process ID 8831. \n   >>> DETAILS: HOSTNAME: [combo] | Source IPs: 27 unique values",
+            "unique_details": "HOSTNAME: [combo] | Source IPs: 27 unique values"
+        },
+        {
+            "event_id": 11,
+            "status": "ROUTINE",
+            "count": 1,
+            "start_time": "2025-06-20 04:44:39",
+            "end_time": "2025-06-20 04:44:39",
+            "duration": "Instant",
+            "description": "At Jun 20 04:44:39, the server combo received SNMP packets from remote host 67.170.148.126, processed by process ID 2318. \n   >>> DETAILS: HOSTNAME: [combo] | Source IPs: [67.170.148.126]",
+            "unique_details": "HOSTNAME: [combo] | Source IPs: [67.170.148.126]"
+        },
+        {
+            "event_id": 13,
+            "status": "CRITICAL",
+            "count": 23,
+            "start_time": "2025-06-30 20:53:04",
+            "end_time": "2025-06-30 20:53:06",
+            "duration": "0 days 00:00:02",
+            "description": "At Jun 30 20:53:04, the server combo logged an event where Kerberos authentication failed, involving process ID 19271. \n   >>> DETAILS: HOSTNAME: [combo]",
+            "unique_details": "HOSTNAME: [combo]"
+        },
+        {
+            "event_id": 14,
+            "status": "ROUTINE",
+            "count": 15,
+            "start_time": "2025-06-30 20:53:04",
+            "end_time": "2025-06-30 20:53:06",
+            "duration": "0 days 00:00:02",
+            "description": "At Jun 30 20:53:04, the server combo logged an authentication failure for user <USERNAME> originating from remote host 163.27.187.39, with the process ID 19274 indicating a software-caused connection abort. \n   >>> DETAILS: HOSTNAME: [combo] | Source IPs: [163.27.187.39]",
+            "unique_details": "HOSTNAME: [combo] | Source IPs: [163.27.187.39]"
+        },
+        {
+            "event_id": 12,
+            "status": "ROUTINE",
+            "count": 8,
+            "start_time": "2025-06-30 20:53:04",
+            "end_time": "2025-06-30 20:53:04",
+            "duration": "Instant",
+            "description": "At Jun 30 20:53:04, the server combo logged an authentication failure for user <USERNAME> originating from remote host 163.27.187.39, as indicated by process ID 19288 in the replay cache code. \n   >>> DETAILS: HOSTNAME: [combo] | Source IPs: [163.27.187.39]",
+            "unique_details": "HOSTNAME: [combo] | Source IPs: [163.27.187.39]"
+        },
+        {
+            "event_id": 16,
+            "status": "ROUTINE",
+            "count": 1,
+            "start_time": "2025-07-07 08:06:15",
+            "end_time": "2025-07-07 08:06:15",
+            "duration": "Instant",
+            "description": "At Jul  7 08:06:15, the server combo logged a root login event for user root with process ID 2421 on tty2. \n   >>> DETAILS: HOSTNAME: [combo]",
+            "unique_details": "HOSTNAME: [combo]"
+        },
+        {
+            "event_id": 15,
+            "status": "ROUTINE",
+            "count": 1,
+            "start_time": "2025-07-07 08:06:15",
+            "end_time": "2025-07-07 08:06:15",
+            "duration": "Instant",
+            "description": "At Jul  7 08:06:15, the server combo logged a session opened for user root initiated by user ID 0. \n   >>> DETAILS: HOSTNAME: [combo] | STATE: [opened] | Users: [root]",
+            "unique_details": "HOSTNAME: [combo] | STATE: [opened] | Users: [root]"
+        },
+        {
+            "event_id": 17,
+            "status": "ROUTINE",
+            "count": 1,
+            "start_time": "2025-07-07 08:09:10",
+            "end_time": "2025-07-07 08:09:10",
+            "duration": "Instant",
+            "description": "At Jul  7 08:09:10, on the server combo, a login(pam_unix) session for user root was recorded with a status of closed, managed by process ID 2421. \n   >>> DETAILS: HOSTNAME: [combo] | STATE: [closed] | Users: [root]",
+            "unique_details": "HOSTNAME: [combo] | STATE: [closed] | Users: [root]"
+        },
+        {
+            "event_id": 18,
+            "status": "ROUTINE",
+            "count": 1,
+            "start_time": "2025-07-11 11:33:13",
+            "end_time": "2025-07-11 11:33:13",
+            "duration": "Instant",
+            "description": "At Jul 11 11:33:13, on the server combo, the process with ID 2803 from the pam_unix module checked the pass for user unknown using the graphical display manager gdm. \n   >>> DETAILS: HOSTNAME: [combo] | Users: [unknown]",
+            "unique_details": "HOSTNAME: [combo] | Users: [unknown]"
+        },
+        {
+            "event_id": 19,
+            "status": "ROUTINE",
+            "count": 1,
+            "start_time": "2025-07-11 11:33:13",
+            "end_time": "2025-07-11 11:33:13",
+            "duration": "Instant",
+            "description": "At Jul 11 11:33:13, on the server combo, the process with ID 2803 of the gdm service encountered an authentication failure for user with UID 0, logged on tty:0, with ruser and rhost details provided. \n   >>> DETAILS: HOSTNAME: [combo]",
+            "unique_details": "HOSTNAME: [combo]"
+        },
+        {
+            "event_id": 20,
+            "status": "ROUTINE",
+            "count": 1,
+            "start_time": "2025-07-11 11:33:17",
+            "end_time": "2025-07-11 11:33:17",
+            "duration": "Instant",
+            "description": "At Jul 11 11:33:17, the server combo encountered an issue with user authentication, as indicated by process ID 2803 of gdm-binary. \n   >>> DETAILS: HOSTNAME: [combo]",
+            "unique_details": "HOSTNAME: [combo]"
+        },
+        {
+            "event_id": 21,
+            "status": "ROUTINE",
+            "count": 2,
+            "start_time": "2025-07-24 02:38:23",
+            "end_time": "2025-07-24 02:38:23",
+            "duration": "Instant",
+            "description": "At Jul 24 02:38:23, the server combo logged an anonymous FTP login attempt from remote host 84.102.20.2,  (anonymous), managed by process ID 16781. \n   >>> DETAILS: HOSTNAME: [combo] | Source IPs: [84.102.20.2,  (anonymous)]",
+            "unique_details": "HOSTNAME: [combo] | Source IPs: [84.102.20.2,  (anonymous)]"
+        },
+        {
+            "event_id": 22,
+            "status": "ROUTINE",
+            "count": 4,
+            "start_time": "2025-07-25 23:23:13",
+            "end_time": "2025-07-25 23:23:13",
+            "duration": "Instant",
+            "description": "At Jul 25 23:23:13, on the server combo, the FTP daemon process with ID 26463 reported a disconnection issue with the transport endpoint. \n   >>> DETAILS: HOSTNAME: [combo]",
+            "unique_details": "HOSTNAME: [combo]"
+        },
+        {
+            "event_id": 23,
+            "status": "ROUTINE",
+            "count": 2,
+            "start_time": "2025-07-25 23:23:13",
+            "end_time": "2025-07-25 23:23:13",
+            "duration": "Instant",
+            "description": "At Jul 25 23:23:13, the server combo logged a warning from process ID 26484 of xinetd, indicating an issue with obtaining the clients address, as the connection was reset by the peer. \n   >>> DETAILS: HOSTNAME: [combo]",
+            "unique_details": "HOSTNAME: [combo]"
+        }
+    ]
+}
