@@ -1,0 +1,69 @@
+- [Jun 14 15:16:01 to Jul 20 23:37:46] At Jun 14 15:16:01, the server combo logged an authentication failure for user 0, with the process ID 19939, on a non-existent tty, with pam_unix handling the event, for the remote host 218.188.2.4.
+  Count: 117 | Context: HOSTNAME: ['combo'] | IP: 15 unique values
+
+- [Jun 14 15:16:02 to Jul 20 23:37:46] At Jun 14 15:16:02, the server combo executed a check pass operation for user unknown using process ID 19937 from thesshd(pam_unix) service.
+  Count: 116 | Context: HOSTNAME: ['combo'] | User: ['unknown']
+
+- [Jun 15 02:04:59 to Jul 26 07:04:12] At Jun 15 02:04:59, the server combo logged an authentication failure for user root, with user ID 0, process ID 20882, and originating from remote host 220-135-151-1.hinet-ip.hinet.net.
+  Count: 372 | Context: HOSTNAME: ['combo'] | IP: 32 unique values | User: ['test', 'root', 'guest']
+
+- [Jun 15 04:06:18 to Jul 27 04:21:39] At Jun 15 04:06:18, on the server combo, asu(pam_unix) session for user cyrus was initiated with a status of opened, managed by process ID 21416 and user ID 0.
+  Count: 86 | Context: HOSTNAME: ['combo'] | STATE: ['opened'] | User: ['news', 'cyrus']
+
+- [Jun 15 04:06:19 to Jul 27 04:21:40] At Jun 15 04:06:19, on the server combo, asu(pam_unix) session for user cyrus was recorded with a status of closed.
+  Count: 86 | Context: HOSTNAME: ['combo'] | STATE: ['closed'] | User: ['news', 'cyrus']
+
+- [Jun 17 07:07:00 to Jul 17 23:21:54] At Jun 17 07:07:00, the server combo logged a connection from remote host 24.54.76.216, 24-54-76-216.bflony.adelphia.net (24.54.76.216, 24-54-76-216.bflony.adelphia.net) by process ID 29505.
+  Count: 292 | Context: HOSTNAME: ['combo'] | IP: 11 unique values
+
+- [Jun 17 20:29:26 to Jul 13 17:22:29] At Jun 17 20:29:26, the server combo logged a opened session for user test initiated by user ID 509.
+  Count: 36 | Context: HOSTNAME: ['combo'] | STATE: ['opened'] | User: ['test']
+
+- [Jun 17 20:34:57 to Jul 13 17:22:29] At Jun 17 20:34:57, the server combo logged a closed session for user test under process ID 30631 using the sshd(pam_unix) service.
+  Count: 36 | Context: HOSTNAME: ['combo'] | STATE: ['closed'] | User: ['test']
+
+- [Jun 18 02:23:10 to Jun 18 02:23:10] At Jun 18 02:23:10, the server combo logged an event where the FTP daemon process with ID 31277 encountered a timeout for a user that was not recognized, after 900 seconds.
+  Count: 1 | Context: HOSTNAME: ['combo'] | NUM: ['900']
+
+- [Jun 20 03:40:59 to Jul 27 10:59:53] At Jun 20 03:40:59, the server combo logged a connection attempt from remote host 222.33.90.199 by process ID 8831.
+  Count: 617 | Context: HOSTNAME: ['combo'] | IP: 27 unique values
+
+- [Jun 20 04:44:39 to Jun 20 04:44:39] At Jun 20 04:44:39, the server combo received SNMP packets from remote host 67.170.148.126, processed by process ID 2318.
+  Count: 1 | Context: HOSTNAME: ['combo'] | IP: ['67.170.148.126']
+
+- [Jun 30 20:53:04 to Jun 30 20:53:06] At Jun 30 20:53:04, the server combo logged an event where Kerberos authentication failed, involving process ID 19271.
+  Count: 23 | Context: HOSTNAME: ['combo']
+
+- [Jun 30 20:53:04 to Jun 30 20:53:06] At Jun 30 20:53:04, the server combo logged an authentication failure for user <USERNAME> originating from remote host 163.27.187.39, with the process ID 19274 indicating a software-caused connection abort.
+  Count: 15 | Context: HOSTNAME: ['combo'] | IP: ['163.27.187.39']
+
+- [Jun 30 20:53:04 to Jun 30 20:53:04] At Jun 30 20:53:04, the server combo logged an authentication failure for user <USERNAME> originating from remote host 163.27.187.39, as indicated by process ID 19288 in the replay cache code.
+  Count: 8 | Context: HOSTNAME: ['combo'] | IP: ['163.27.187.39']
+
+- [Jul  7 08:06:15 to Jul  7 08:06:15] At Jul  7 08:06:15, the server combo logged a root login event for user root with process ID 2421 on tty2.
+  Count: 1 | Context: HOSTNAME: ['combo']
+
+- [Jul  7 08:06:15 to Jul  7 08:06:15] At Jul  7 08:06:15, the server combo logged a session opened for user root initiated by user ID 0.
+  Count: 1 | Context: HOSTNAME: ['combo'] | STATE: ['opened'] | User: ['root']
+
+- [Jul  7 08:09:10 to Jul  7 08:09:10] At Jul  7 08:09:10, on the server combo, a login(pam_unix) session for user root was recorded with a status of closed, managed by process ID 2421.
+  Count: 1 | Context: HOSTNAME: ['combo'] | STATE: ['closed'] | User: ['root']
+
+- [Jul 11 11:33:13 to Jul 11 11:33:13] At Jul 11 11:33:13, on the server combo, the process with ID 2803 from the pam_unix module checked the pass for user unknown using the graphical display manager gdm.
+  Count: 1 | Context: HOSTNAME: ['combo'] | User: ['unknown']
+
+- [Jul 11 11:33:13 to Jul 11 11:33:13] At Jul 11 11:33:13, on the server combo, the process with ID 2803 of the gdm service encountered an authentication failure for user with UID 0, logged on tty:0, with ruser and rhost details provided.
+  Count: 1 | Context: HOSTNAME: ['combo']
+
+- [Jul 11 11:33:17 to Jul 11 11:33:17] At Jul 11 11:33:17, the server combo encountered an issue with user authentication, as indicated by process ID 2803 of gdm-binary.
+  Count: 1 | Context: HOSTNAME: ['combo']
+
+- [Jul 24 02:38:23 to Jul 24 02:38:23] At Jul 24 02:38:23, the server combo logged an anonymous FTP login attempt from remote host 84.102.20.2,  (anonymous), managed by process ID 16781.
+  Count: 2 | Context: HOSTNAME: ['combo'] | IP: ['84.102.20.2,  (anonymous)']
+
+- [Jul 25 23:23:13 to Jul 25 23:23:13] At Jul 25 23:23:13, on the server combo, the FTP daemon process with ID 26463 reported a disconnection issue with the transport endpoint.
+  Count: 4 | Context: HOSTNAME: ['combo']
+
+- [Jul 25 23:23:13 to Jul 25 23:23:13] At Jul 25 23:23:13, the server combo logged a warning from process ID 26484 of xinetd, indicating an issue with obtaining the clients address, as the connection was reset by the peer.
+  Count: 2 | Context: HOSTNAME: ['combo']
+
