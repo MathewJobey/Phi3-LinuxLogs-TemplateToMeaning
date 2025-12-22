@@ -1,26 +1,40 @@
-========================================
-      AUTOMATED LOG ANALYSIS REPORT
-========================================
-Generated: 2025-12-22 20:38
+============================================================
+             AUTOMATED LOG ANALYSIS REPORT
+============================================================
+Generated: 2025-12-22 20:43
 
-1. EXECUTIVE SUMMARY
+1. EXECUTIVE OVERVIEW
 ---------------------
-Total Logs:   1820
-Time Span:    Jun 14 15:16 to Jul 27 10:59
-Log Duration: 42 days 19:43:52
+Analysis Period:      2024-Jan-01 04:02 to 2024-Dec-31 04:07
+Duration:             365 days 00:05:29
+Total Log Entries:    8902
+Unique Event Types:   56 distinct templates
 
-KEY FINDINGS:
-* Top Service: ftpd (916 events)
-* Top User:    root
-* Top IP:      150.183.249.110
+2. ACTIVITY ANALYSIS
+---------------------
+Peak Activity Time:   Nov 05 (approx 195 events/day)
+Avg Event Rate:       1.0 events per hour
 
-2. TEMPLATE KEY (Refers to Chart 3)
+3. CRITICAL BREAKDOWN (Top 3)
+---------------------
+Top System Services (Components generating the most noise):
+  -> sshd(pam_unix) (3944, 44.3%); ftpd (3445, 38.7%); su(pam_unix) (944, 10.6%)
+
+Top Active Users (Accounts triggering the most events):
+  -> root (2290, 25.7%); unknown (1043, 11.7%); test (555, 6.2%)
+
+Top Remote Sources (External IPs connecting to the system):
+  -> 211.107.232.1 (241, 2.7%); 84.57.172.16, dslb-084-057-172-016.pools.arcor-ip.net (189, 2.1%); 211.72.151.162 (93, 1.0%)
+
+4. EVENT DICTIONARY (Key for Chart 3)
 ------------------------------------
-[Template 10]: At Jun 20 03:40:59, the server combo logged a connection attempt from remote host 222.33.90.199 by process ID 8831.
-[Template 3]: At Jun 15 02:04:59, the server combo logged an authentication failure for user root, with user ID 0, process ID 20882...
-[Template 6]: At Jun 17 07:07:00, the server combo logged a connection from remote host 24.54.76.216, 24-54-76-216.bflony.adelphia....
-[Template 1]: At Jun 14 15:16:01, the server combo logged an authentication failure for user 0, with the process ID 19939, on a non...
-[Template 2]: At Jun 14 15:16:02, the server combo executed a check pass operation for user unknown using process ID 19937 from the...
-[Template 5]: At Jun 15 04:06:19, on the server combo, asu(pam_unix) session for user cyrus was recorded with a status of closed.
-[Template 4]: At Jun 15 04:06:18, on the server combo, asu(pam_unix) session for user cyrus was initiated with a status of opened, ...
-[Template 7]: At Jun 17 20:29:26, the server combo logged a opened session for user test initiated by user ID 509.
+Detailed meanings for the most frequent Template IDs shown in the graph:
+
+[Template 16]: At Jan  7 15:45:10, the server combo logged an authentication failure for user test, with user ID 0, process ID 29228, and orig...
+[Template 19]: At Jan  6 15:53:55, the server combo logged a connection from remote host 84.139.180.196, p548BB4C4.dip0.t-ipconnect.de (84.139...
+[Template 15]: At Jan  9 23:44:50, the server combo logged a connection attempt from remote host 84.232.2.50 by process ID 7043.
+[Template 14]: At Jan 10 10:12:58, the server combo executed a check pass operation for user unknown using process ID 8695 from thesshd(pam_un...
+[Template 8]: At Jan  1 04:02:05, on the server combo, asu(pam_unix) session for user cyrus was initiated with a status of opened, managed by...
+[Template 9]: At Jan  1 04:02:06, on the server combo, asu(pam_unix) session for user cyrus was recorded with a status of closed.
+[Template 55]: At Jan 29 09:27:47, the server combo processed a check pass for user unknown using process ID 3396.
+[Template 32]: At Feb 25 04:02:59, the server combo experienced an issue with the telnetd process, identified by process ID 6464, where the pe...
