@@ -64,32 +64,31 @@ def generate_advanced_report(file_path, output_txt='Log_Analysis_Report.txt'):
 
     df_logs['Template ID'] = df_logs['Template ID'].astype(str)
 
-    # --- ENHANCED SECURITY TAGGING ---
+    # --- STRICT SEVERITY TAGGING ---
     def classify_severity(row):
+        # We check both Raw Log and Meaning Log for explicit keywords
         text = (str(row['Raw Log']) + " " + str(row['Meaning Log'])).lower()
-        if any(x in text for x in ['illegal', 'refused', 'panic', 'fatal', 'critical']):
+        
+        # STRICT CRITICAL: Must have these exact high-severity words
+        if any(x in text for x in ['critical', 'fatal', 'panic', 'emergency', 'alert', 'segmentation fault', 'died']):
             return 'CRITICAL'
-        elif any(x in text for x in ['fail', 'error', 'warning', 'denied', 'unable', 'bad']):
+        
+        # STRICT WARNING: Must have "warning" or explicit "error" (excluding simple "fail")
+        # We deliberately exclude "failure" to avoid flagging every login fail as a system warning.
+        elif any(x in text for x in ['warning', 'warn']):
             return 'WARNING'
-        else:
-            return 'INFO'
+        
+        return 'INFO'
             
     df_logs['Severity'] = df_logs.apply(classify_severity, axis=1)
 
     def classify_security(row):
         text = str(row['Raw Log']).lower()
-        
-        # 1. Blocks & Fails
         if 'illegal' in text: return 'Illegal Access'
         if 'authentication failure' in text: return 'Auth Failure'
-        
-        # 2. High Interest
         if 'root' in text and 'session' in text: return 'Root Activity'
-        
-        # 3. Success (New Logic)
         if 'session opened' in text or 'logged in' in text or 'accepted' in text: 
             return 'Successful Login'
-            
         return 'Normal'
         
     df_logs['Security_Tag'] = df_logs.apply(classify_security, axis=1)
@@ -183,20 +182,17 @@ def generate_advanced_report(file_path, output_txt='Log_Analysis_Report.txt'):
     plt.savefig('5_top_ips.png')
     plt.close()
 
-    # Chart 6: Security Breakdown (Updated)
+    # Chart 6: Security Breakdown
     plt.figure(figsize=(8, 6))
     security_counts = df_logs[df_logs['Security_Tag'] != 'Normal']['Security_Tag'].value_counts()
     
-    # Custom colors for intuitive reading
-    # Success=Green, Fail=Red, Root=Orange, Illegal=Purple
     color_map = {
-        'Successful Login': '#99ff99', # Light Green
-        'Auth Failure': '#ff9999',     # Light Red
-        'Root Activity': '#ffcc99',    # Light Orange
-        'Illegal Access': '#c2c2f0',   # Light Purple
+        'Successful Login': '#99ff99', 
+        'Auth Failure': '#ff9999',     
+        'Root Activity': '#ffcc99',    
+        'Illegal Access': '#c2c2f0',   
         'Normal': '#f0f0f0'
     }
-    # Map colors based on what's present in data
     colors = [color_map.get(x, '#cccccc') for x in security_counts.index]
 
     if not security_counts.empty:
@@ -226,6 +222,7 @@ def generate_advanced_report(file_path, output_txt='Log_Analysis_Report.txt'):
     # Stats
     sev_counts = df_logs['Severity'].value_counts()
     crit_count = sev_counts.get('CRITICAL', 0)
+    warn_count = sev_counts.get('WARNING', 0)
     
     root_events = df_logs[df_logs['Security_Tag'] == 'Root Activity']
     auth_fails = df_logs[df_logs['Security_Tag'] == 'Auth Failure']
@@ -246,6 +243,7 @@ def generate_advanced_report(file_path, output_txt='Log_Analysis_Report.txt'):
         "2. SECURITY AUDIT",
         "---------------------",
         f"🔴 Critical Events:     {crit_count} events detected",
+        f"🟠 Warning Events:      {warn_count} events detected",
         f"🔐 Auth Failures:       {len(auth_fails)} failed login attempts",
         f"⚡ Root Activity:       {len(root_events)} sessions involving root user",
         f"✅ Successful Logins:   {len(success_logins)} sessions established",
@@ -265,12 +263,50 @@ def generate_advanced_report(file_path, output_txt='Log_Analysis_Report.txt'):
         "",
         "Top Remote Sources:",
         f"  -> {get_top_3_str(df_logs[df_logs['RHOST'] != 'N/A']['RHOST'].value_counts())}",
-        "",
-        "5. EVENT PATTERN DICTIONARY",
-        "------------------------------------",
-        "Definitions for the Top Event Templates:",
         ""
     ]
+
+    # --- NEW SECTION: STRICT HIGHLIGHTS ---
+    summary_lines.append("5. RISK EVENT HIGHLIGHTS (Strictly Critical/Warning)")
+    summary_lines.append("--------------------------------------------------")
+    
+    # Filter only STRICT CRITICAL
+    crit_groups = df_logs[df_logs['Severity'] == 'CRITICAL'].groupby('Template ID')
+    sorted_crit = sorted(crit_groups, key=lambda x: len(x[1]), reverse=True)
+
+    if not sorted_crit:
+        summary_lines.append("✅ No 'Critical', 'Fatal', or 'Panic' events found.")
+    else:
+        summary_lines.append(f"🔴 CRITICAL / FATAL EVENTS ({len(crit_groups)} types):")
+        for tid, group in sorted_crit:
+            row = group.iloc[0]
+            summary_lines.append(f"   [Count: {len(group)}] Template {tid}")
+            summary_lines.append(f"   RAW:     {str(row['Raw Log'])[:120]}")
+            summary_lines.append("")
+
+    summary_lines.append("")
+
+    # Filter only STRICT WARNING
+    warn_groups = df_logs[df_logs['Severity'] == 'WARNING'].groupby('Template ID')
+    sorted_warn = sorted(warn_groups, key=lambda x: len(x[1]), reverse=True)
+
+    if not sorted_warn:
+        summary_lines.append("✅ No explicit 'Warning' events found.")
+    else:
+        summary_lines.append(f"🟠 WARNING EVENTS ({len(warn_groups)} types):")
+        for tid, group in sorted_warn:
+            row = group.iloc[0]
+            summary_lines.append(f"   [Count: {len(group)}] Template {tid}")
+            summary_lines.append(f"   RAW:     {str(row['Raw Log'])[:120]}")
+            summary_lines.append("")
+    
+    summary_lines.append("")
+    # -------------------------------
+
+    summary_lines.append("6. EVENT PATTERN DICTIONARY")
+    summary_lines.append("------------------------------------")
+    summary_lines.append("Definitions for the Top Event Templates:")
+    summary_lines.append("")
     
     top_templates_desc = df_logs['Template ID'].value_counts().head(8)
     for tid in top_templates_desc.index:

@@ -1,7 +1,7 @@
 ============================================================
              ADVANCED LOG ANALYSIS REPORT
 ============================================================
-Generated: 2025-12-23 00:20
+Generated: 2025-12-23 00:44
 
 1. EXECUTIVE OVERVIEW
 ---------------------
@@ -12,9 +12,10 @@ Health Status:        ✅ STABLE
 2. SECURITY AUDIT
 ---------------------
 🔴 Critical Events:     0 events detected
-🟠 Warning Events:      538 events detected
+🟠 Warning Events:      2 events detected
 🔐 Auth Failures:       490 failed login attempts
 ⚡ Root Activity:       2 sessions involving root user
+✅ Successful Logins:   122 sessions established
 
 3. ACTIVITY ANALYSIS
 ---------------------
@@ -32,7 +33,17 @@ Top Active Users:
 Top Remote Sources:
   -> 150.183.249.110 (80, 4.4%); 203.101.45.59, dsl-Chn-static-059.45.101.203.touchtelindia.net (46, 2.5%); 207.30.238.8, host8.topspot.net (46, 2.5%)
 
-5. EVENT PATTERN DICTIONARY
+5. RISK EVENT HIGHLIGHTS (Strictly Critical/Warning)
+--------------------------------------------------
+✅ No 'Critical', 'Fatal', or 'Panic' events found.
+
+🟠 WARNING EVENTS (1 types):
+   [Count: 2] Template 23
+   RAW:     Jul 25 23:23:13 combo xinetd[26484]: warning: can't get client address: Connection reset by peer
+   MEANING: At Jul 25 23:23:13, the server combo logged a warning from process ID 26484 of xinetd, indicating an issue with obtaining the clients address, as the connection was reset by the peer.
+
+
+6. EVENT PATTERN DICTIONARY
 ------------------------------------
 Definitions for the Top Event Templates:
 
