@@ -7,21 +7,40 @@ import os
 import sys
 import textwrap
 
-def generate_advanced_report(file_path, output_txt='Log_Analysis_Report.txt'):
+def generate_final_report(file_path, output_txt='Log_Analysis_Report.txt'):
     print(f"Reading data from: {file_path}...")
     
-    # 1. Load Data
+    df_logs = None
+    df_templates = None
+    
+    # 1. Load Data (Attempt to load both sheets)
     try:
         if file_path.lower().endswith('.xlsx'):
+            # Load Logs
             try:
                 df_logs = pd.read_excel(file_path, sheet_name='Log Analysis')
             except:
-                df_logs = pd.read_excel(file_path, sheet_name=0)
+                try:
+                    df_logs = pd.read_excel(file_path, sheet_name=0)
+                except:
+                    print("Error: Could not read 'Log Analysis' sheet.")
+                    return
+
+            # Load Templates (for generic meanings)
+            try:
+                df_templates = pd.read_excel(file_path, sheet_name='Template Summary')
+            except:
+                print("Warning: 'Template Summary' sheet not found. Generic meanings might default to specific ones.")
+                df_templates = pd.DataFrame() # Empty DF
         else:
+            # CSV Handling (Assumes it's the Log Analysis file)
             try:
                 df_logs = pd.read_csv(file_path)
+                df_templates = pd.DataFrame()
             except UnicodeDecodeError:
                 df_logs = pd.read_csv(file_path, encoding='latin1')
+                df_templates = pd.DataFrame()
+
     except Exception as e:
         print(f"Error reading file: {e}")
         return
@@ -29,6 +48,8 @@ def generate_advanced_report(file_path, output_txt='Log_Analysis_Report.txt'):
     # 2. Data Cleaning
     print("Processing data...")
     df_logs.columns = [c.strip() for c in df_logs.columns]
+    if not df_templates.empty:
+        df_templates.columns = [c.strip() for c in df_templates.columns]
     
     # Parse Parameters
     df_logs['params'] = df_logs['Parameters'].apply(lambda x: json.loads(x) if isinstance(x, str) else {})
@@ -63,21 +84,20 @@ def generate_advanced_report(file_path, output_txt='Log_Analysis_Report.txt'):
         return
 
     df_logs['Template ID'] = df_logs['Template ID'].astype(str)
+    
+    # Map Generic Meanings if available
+    generic_meaning_map = {}
+    if not df_templates.empty and 'Template ID' in df_templates.columns and 'Event Meaning' in df_templates.columns:
+        df_templates['Template ID'] = df_templates['Template ID'].astype(str)
+        generic_meaning_map = dict(zip(df_templates['Template ID'], df_templates['Event Meaning']))
 
-    # --- STRICT SEVERITY TAGGING ---
+    # --- SEVERITY TAGGING ---
     def classify_severity(row):
-        # We check both Raw Log and Meaning Log for explicit keywords
         text = (str(row['Raw Log']) + " " + str(row['Meaning Log'])).lower()
-        
-        # STRICT CRITICAL: Must have these exact high-severity words
         if any(x in text for x in ['critical', 'fatal', 'panic', 'emergency', 'alert', 'segmentation fault', 'died']):
             return 'CRITICAL'
-        
-        # STRICT WARNING: Must have "warning" or explicit "error" (excluding simple "fail")
-        # We deliberately exclude "failure" to avoid flagging every login fail as a system warning.
-        elif any(x in text for x in ['warning', 'warn']):
+        elif any(x in text for x in ['warning', 'warn', 'error', 'refused']):
             return 'WARNING'
-        
         return 'INFO'
             
     df_logs['Severity'] = df_logs.apply(classify_severity, axis=1)
@@ -115,7 +135,6 @@ def generate_advanced_report(file_path, output_txt='Log_Analysis_Report.txt'):
         xlabel_text = "Date"
         time_unit = "Day"
 
-    # Helper for Bar Labels
     def add_bar_labels(ax):
         for p in ax.patches:
             if p.get_width() > 0:
@@ -125,7 +144,7 @@ def generate_advanced_report(file_path, output_txt='Log_Analysis_Report.txt'):
     # 3. Generate Charts
     print("Generating visualizations...")
     
-    # Chart 1: Volume
+    # 1. Volume
     plt.figure(figsize=(10, 5))
     time_counts = df_logs.resample(resample_rule, on='datetime').size()
     if not time_counts.empty:
@@ -143,7 +162,7 @@ def generate_advanced_report(file_path, output_txt='Log_Analysis_Report.txt'):
     else:
         peak_str, peak_vol = "N/A", 0
 
-    # Chart 2: Services
+    # 2. Services
     plt.figure(figsize=(10, 5))
     ax = df_logs['Service'].value_counts().head(10).sort_values().plot(kind='barh', color='#2ca02c')
     ax.xaxis.set_major_locator(plt.MaxNLocator(integer=True))
@@ -153,7 +172,7 @@ def generate_advanced_report(file_path, output_txt='Log_Analysis_Report.txt'):
     plt.savefig('2_top_services.png')
     plt.close()
 
-    # Chart 3: Templates
+    # 3. Templates
     plt.figure(figsize=(10, 6))
     top_templates = df_logs['Template ID'].value_counts().head(8).sort_values()
     ax = top_templates.plot(kind='barh', color='#ff7f0e')
@@ -164,7 +183,7 @@ def generate_advanced_report(file_path, output_txt='Log_Analysis_Report.txt'):
     plt.savefig('3_top_templates.png')
     plt.close()
 
-    # Chart 4: Users
+    # 4. Users
     plt.figure(figsize=(10, 5))
     ax = df_logs[df_logs['USERNAME'] != 'N/A']['USERNAME'].value_counts().head(10).sort_values().plot(kind='barh', color='#9467bd')
     add_bar_labels(ax)
@@ -173,7 +192,7 @@ def generate_advanced_report(file_path, output_txt='Log_Analysis_Report.txt'):
     plt.savefig('4_top_users.png')
     plt.close()
 
-    # Chart 5: IPs
+    # 5. IPs
     plt.figure(figsize=(10, 5))
     ax = df_logs[df_logs['RHOST'] != 'N/A']['RHOST'].value_counts().head(10).sort_values().plot(kind='barh', color='#d62728')
     add_bar_labels(ax)
@@ -182,17 +201,10 @@ def generate_advanced_report(file_path, output_txt='Log_Analysis_Report.txt'):
     plt.savefig('5_top_ips.png')
     plt.close()
 
-    # Chart 6: Security Breakdown
+    # 6. Security Breakdown
     plt.figure(figsize=(8, 6))
     security_counts = df_logs[df_logs['Security_Tag'] != 'Normal']['Security_Tag'].value_counts()
-    
-    color_map = {
-        'Successful Login': '#99ff99', 
-        'Auth Failure': '#ff9999',     
-        'Root Activity': '#ffcc99',    
-        'Illegal Access': '#c2c2f0',   
-        'Normal': '#f0f0f0'
-    }
+    color_map = {'Successful Login': '#99ff99', 'Auth Failure': '#ff9999', 'Root Activity': '#ffcc99', 'Illegal Access': '#c2c2f0', 'Normal': '#f0f0f0'}
     colors = [color_map.get(x, '#cccccc') for x in security_counts.index]
 
     if not security_counts.empty:
@@ -206,7 +218,7 @@ def generate_advanced_report(file_path, output_txt='Log_Analysis_Report.txt'):
     plt.close()
 
     # 4. Prepare Report
-    print(f"Writing advanced report to {output_txt}...")
+    print(f"Writing report to {output_txt}...")
     
     def get_top_3_str(series):
         if series.empty: return "None"
@@ -218,8 +230,6 @@ def generate_advanced_report(file_path, output_txt='Log_Analysis_Report.txt'):
         return "; ".join(items)
 
     total_events = len(df_logs)
-    
-    # Stats
     sev_counts = df_logs['Severity'].value_counts()
     crit_count = sev_counts.get('CRITICAL', 0)
     warn_count = sev_counts.get('WARNING', 0)
@@ -230,7 +240,7 @@ def generate_advanced_report(file_path, output_txt='Log_Analysis_Report.txt'):
     
     summary_lines = [
         "============================================================",
-        "             ADVANCED LOG ANALYSIS REPORT",
+        "             LOG ANALYSIS REPORT",
         "============================================================",
         f"Generated: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M')}",
         "",
@@ -250,74 +260,71 @@ def generate_advanced_report(file_path, output_txt='Log_Analysis_Report.txt'):
         "",
         "3. ACTIVITY ANALYSIS",
         "---------------------",
-        f"Peak Activity Time:   {peak_str} (approx {peak_vol} events/{time_unit.lower()})",
-        f"Avg Event Rate:       {total_events / (total_hours if total_hours > 0 else 1):.1f} events per hour",
+        f"Peak Activity Time:   {peak_str} ({peak_vol} events)",
+        f"Avg Event Rate:       {total_events / (total_hours if total_hours > 0 else 1):.1f} events/hour",
         "",
-        "4. CRITICAL BREAKDOWN (Top 3)",
+        "4. CRITICAL BREAKDOWN",
         "---------------------",
-        "Top System Services:",
-        f"  -> {get_top_3_str(df_logs['Service'].value_counts())}",
-        "",
-        "Top Active Users:",
-        f"  -> {get_top_3_str(df_logs[df_logs['USERNAME'] != 'N/A']['USERNAME'].value_counts())}",
-        "",
-        "Top Remote Sources:",
-        f"  -> {get_top_3_str(df_logs[df_logs['RHOST'] != 'N/A']['RHOST'].value_counts())}",
+        f"Top Services:    {get_top_3_str(df_logs['Service'].value_counts())}",
+        f"Top Users:       {get_top_3_str(df_logs[df_logs['USERNAME'] != 'N/A']['USERNAME'].value_counts())}",
+        f"Top IPs:         {get_top_3_str(df_logs[df_logs['RHOST'] != 'N/A']['RHOST'].value_counts())}",
         ""
     ]
 
-    # --- NEW SECTION: STRICT HIGHLIGHTS ---
+    # --- 5. RISK EVENT HIGHLIGHTS ---
     summary_lines.append("5. RISK EVENT HIGHLIGHTS (Strictly Critical/Warning)")
     summary_lines.append("--------------------------------------------------")
     
-    # Filter only STRICT CRITICAL
+    def add_risk_section(severity_label, group_list):
+        if not group_list:
+            summary_lines.append(f"✅ No '{severity_label}' events found.")
+        else:
+            summary_lines.append(f"{'🔴' if severity_label == 'CRITICAL' else '🟠'} {severity_label} EVENTS ({len(group_list)} types):")
+            for tid, group in group_list:
+                count = len(group)
+                row = group.iloc[0]
+                
+                # Dynamic Content Logic
+                if count == 1:
+                    # Single Occurrence: Show specific RAW and specific MEANING
+                    log_content = str(row['Raw Log']).strip()
+                    meaning_content = str(row['Meaning Log']).strip()
+                    label_type = "RAW"
+                else:
+                    # Multiple Occurrences: Show TEMPLATE and GENERIC MEANING
+                    if 'Drained Named Log' in df_logs.columns:
+                        log_content = str(row['Drained Named Log']).strip()
+                    else:
+                        log_content = str(row['Raw Log']).strip() # Fallback
+                    
+                    # Try to get generic meaning, fallback to specific if missing
+                    meaning_content = generic_meaning_map.get(tid, str(row['Meaning Log'])).strip()
+                    label_type = "TEMPLATE"
+
+                summary_lines.append(f"   [Count: {count}] Template {tid}")
+                summary_lines.append(f"   {label_type}:     {textwrap.fill(log_content, width=100, subsequent_indent='            ')}")
+                summary_lines.append(f"   MEANING: {textwrap.fill(meaning_content, width=100, subsequent_indent='            ')}")
+                summary_lines.append("")
+
+    # Filter & Sort
     crit_groups = df_logs[df_logs['Severity'] == 'CRITICAL'].groupby('Template ID')
     sorted_crit = sorted(crit_groups, key=lambda x: len(x[1]), reverse=True)
-
-    if not sorted_crit:
-        summary_lines.append("✅ No 'Critical', 'Fatal', or 'Panic' events found.")
-    else:
-        summary_lines.append(f"🔴 CRITICAL / FATAL EVENTS ({len(crit_groups)} types):")
-        for tid, group in sorted_crit:
-            row = group.iloc[0]
-            summary_lines.append(f"   [Count: {len(group)}] Template {tid}")
-            summary_lines.append(f"   RAW:     {str(row['Raw Log'])[:120]}")
-            summary_lines.append("")
-
+    add_risk_section("CRITICAL", sorted_crit)
+    
     summary_lines.append("")
-
-    # Filter only STRICT WARNING
+    
     warn_groups = df_logs[df_logs['Severity'] == 'WARNING'].groupby('Template ID')
     sorted_warn = sorted(warn_groups, key=lambda x: len(x[1]), reverse=True)
-
-    if not sorted_warn:
-        summary_lines.append("✅ No explicit 'Warning' events found.")
-    else:
-        summary_lines.append(f"🟠 WARNING EVENTS ({len(warn_groups)} types):")
-        for tid, group in sorted_warn:
-            row = group.iloc[0]
-            summary_lines.append(f"   [Count: {len(group)}] Template {tid}")
-            summary_lines.append(f"   RAW:     {str(row['Raw Log'])[:120]}")
-            summary_lines.append("")
+    add_risk_section("WARNING", sorted_warn)
     
     summary_lines.append("")
-    # -------------------------------
 
+    # --- 6. EVENT PATTERN DICTIONARY ---
     summary_lines.append("6. EVENT PATTERN DICTIONARY")
     summary_lines.append("------------------------------------")
-    summary_lines.append("Definitions for the Top Event Templates:")
-    summary_lines.append("")
-    
-    top_templates_desc = df_logs['Template ID'].value_counts().head(8)
-    for tid in top_templates_desc.index:
-        if 'Drained Named Log' in df_logs.columns:
-            template_pattern = df_logs[df_logs['Template ID'] == tid]['Drained Named Log'].iloc[0]
-        else:
-            template_pattern = df_logs[df_logs['Template ID'] == tid]['Meaning Log'].iloc[0]
-            
-        template_pattern = str(template_pattern).replace('\n', ' ').strip()
-        wrapped_text = textwrap.fill(f"[Template {tid}]: {template_pattern}", width=90, subsequent_indent="    ")
-        summary_lines.append(wrapped_text)
+    for tid in df_logs['Template ID'].value_counts().head(8).index:
+        pattern = df_logs[df_logs['Template ID'] == tid].iloc[0].get('Drained Named Log', df_logs[df_logs['Template ID'] == tid].iloc[0]['Meaning Log'])
+        summary_lines.append(textwrap.fill(f"[Template {tid}]: {str(pattern).replace(chr(10), ' ')}", width=90, subsequent_indent="    "))
         summary_lines.append("")
 
     with open(output_txt, 'w', encoding='utf-8') as f:
@@ -326,6 +333,6 @@ def generate_advanced_report(file_path, output_txt='Log_Analysis_Report.txt'):
     print(f"Done! Report saved to '{output_txt}'.")
 
 if __name__ == "__main__":
-    print("--- Advanced Log Analysis Tool ---")
+    print("--- Final Log Analysis Tool ---")
     log_input = input("Enter file path: ").strip().strip('"')
-    if log_input: generate_advanced_report(log_input)
+    if log_input: generate_final_report(log_input)
