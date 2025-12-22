@@ -1,0 +1,26 @@
+========================================
+      AUTOMATED LOG ANALYSIS REPORT
+========================================
+Generated: 2025-12-22 20:38
+
+1. EXECUTIVE SUMMARY
+---------------------
+Total Logs:   1820
+Time Span:    Jun 14 15:16 to Jul 27 10:59
+Log Duration: 42 days 19:43:52
+
+KEY FINDINGS:
+* Top Service: ftpd (916 events)
+* Top User:    root
+* Top IP:      150.183.249.110
+
+2. TEMPLATE KEY (Refers to Chart 3)
+------------------------------------
+[Template 10]: At Jun 20 03:40:59, the server combo logged a connection attempt from remote host 222.33.90.199 by process ID 8831.
+[Template 3]: At Jun 15 02:04:59, the server combo logged an authentication failure for user root, with user ID 0, process ID 20882...
+[Template 6]: At Jun 17 07:07:00, the server combo logged a connection from remote host 24.54.76.216, 24-54-76-216.bflony.adelphia....
+[Template 1]: At Jun 14 15:16:01, the server combo logged an authentication failure for user 0, with the process ID 19939, on a non...
+[Template 2]: At Jun 14 15:16:02, the server combo executed a check pass operation for user unknown using process ID 19937 from the...
+[Template 5]: At Jun 15 04:06:19, on the server combo, asu(pam_unix) session for user cyrus was recorded with a status of closed.
+[Template 4]: At Jun 15 04:06:18, on the server combo, asu(pam_unix) session for user cyrus was initiated with a status of opened, ...
+[Template 7]: At Jun 17 20:29:26, the server combo logged a opened session for user test initiated by user ID 509.
