@@ -64,7 +64,7 @@ def generate_advanced_report(file_path, output_txt='Log_Analysis_Report.txt'):
 
     df_logs['Template ID'] = df_logs['Template ID'].astype(str)
 
-    # --- ENHANCED SECURITY TAGGING ---
+    # --- SEVERITY & SECURITY TAGGING ---
     def classify_severity(row):
         text = (str(row['Raw Log']) + " " + str(row['Meaning Log'])).lower()
         if any(x in text for x in ['illegal', 'refused', 'panic', 'fatal', 'critical']):
@@ -78,18 +78,10 @@ def generate_advanced_report(file_path, output_txt='Log_Analysis_Report.txt'):
 
     def classify_security(row):
         text = str(row['Raw Log']).lower()
-        
-        # 1. Blocks & Fails
-        if 'illegal' in text: return 'Illegal Access'
-        if 'authentication failure' in text: return 'Auth Failure'
-        
-        # 2. High Interest
         if 'root' in text and 'session' in text: return 'Root Activity'
-        
-        # 3. Success (New Logic)
-        if 'session opened' in text or 'logged in' in text or 'accepted' in text: 
-            return 'Successful Login'
-            
+        if 'authentication failure' in text: return 'Auth Failure'
+        if 'check pass' in text: return 'Password Check'
+        if 'illegal' in text: return 'Illegal Access'
         return 'Normal'
         
     df_logs['Security_Tag'] = df_logs.apply(classify_security, axis=1)
@@ -144,17 +136,17 @@ def generate_advanced_report(file_path, output_txt='Log_Analysis_Report.txt'):
     else:
         peak_str, peak_vol = "N/A", 0
 
-    # Chart 2: Services
+    # Chart 2: Services (FIXED: Now has labels)
     plt.figure(figsize=(10, 5))
     ax = df_logs['Service'].value_counts().head(10).sort_values().plot(kind='barh', color='#2ca02c')
     ax.xaxis.set_major_locator(plt.MaxNLocator(integer=True))
-    add_bar_labels(ax)
+    add_bar_labels(ax) # <-- Added this
     plt.title('Top System Services')
     plt.tight_layout()
     plt.savefig('2_top_services.png')
     plt.close()
 
-    # Chart 3: Templates
+    # Chart 3: Templates (Already had labels)
     plt.figure(figsize=(10, 6))
     top_templates = df_logs['Template ID'].value_counts().head(8).sort_values()
     ax = top_templates.plot(kind='barh', color='#ff7f0e')
@@ -165,42 +157,29 @@ def generate_advanced_report(file_path, output_txt='Log_Analysis_Report.txt'):
     plt.savefig('3_top_templates.png')
     plt.close()
 
-    # Chart 4: Users
+    # Chart 4: Users (FIXED: Now has labels)
     plt.figure(figsize=(10, 5))
     ax = df_logs[df_logs['USERNAME'] != 'N/A']['USERNAME'].value_counts().head(10).sort_values().plot(kind='barh', color='#9467bd')
-    add_bar_labels(ax)
+    add_bar_labels(ax) # <-- Added this
     plt.title('Top Active Users')
     plt.tight_layout()
     plt.savefig('4_top_users.png')
     plt.close()
 
-    # Chart 5: IPs
+    # Chart 5: IPs (FIXED: Now has labels)
     plt.figure(figsize=(10, 5))
     ax = df_logs[df_logs['RHOST'] != 'N/A']['RHOST'].value_counts().head(10).sort_values().plot(kind='barh', color='#d62728')
-    add_bar_labels(ax)
+    add_bar_labels(ax) # <-- Added this
     plt.title('Top Remote IPs')
     plt.tight_layout()
     plt.savefig('5_top_ips.png')
     plt.close()
 
-    # Chart 6: Security Breakdown (Updated)
+    # Chart 6: Security Breakdown
     plt.figure(figsize=(8, 6))
     security_counts = df_logs[df_logs['Security_Tag'] != 'Normal']['Security_Tag'].value_counts()
-    
-    # Custom colors for intuitive reading
-    # Success=Green, Fail=Red, Root=Orange, Illegal=Purple
-    color_map = {
-        'Successful Login': '#99ff99', # Light Green
-        'Auth Failure': '#ff9999',     # Light Red
-        'Root Activity': '#ffcc99',    # Light Orange
-        'Illegal Access': '#c2c2f0',   # Light Purple
-        'Normal': '#f0f0f0'
-    }
-    # Map colors based on what's present in data
-    colors = [color_map.get(x, '#cccccc') for x in security_counts.index]
-
     if not security_counts.empty:
-        security_counts.plot(kind='pie', autopct='%1.1f%%', colors=colors)
+        security_counts.plot(kind='pie', autopct='%1.1f%%', colors=['#ff9999','#66b3ff','#99ff99','#ffcc99'])
         plt.title('Security Event Distribution')
         plt.ylabel('')
     else:
@@ -222,14 +201,14 @@ def generate_advanced_report(file_path, output_txt='Log_Analysis_Report.txt'):
         return "; ".join(items)
 
     total_events = len(df_logs)
+    unique_templates = df_logs['Template ID'].nunique()
     
     # Stats
     sev_counts = df_logs['Severity'].value_counts()
     crit_count = sev_counts.get('CRITICAL', 0)
-    
+    warn_count = sev_counts.get('WARNING', 0)
     root_events = df_logs[df_logs['Security_Tag'] == 'Root Activity']
     auth_fails = df_logs[df_logs['Security_Tag'] == 'Auth Failure']
-    success_logins = df_logs[df_logs['Security_Tag'] == 'Successful Login']
     
     summary_lines = [
         "============================================================",
@@ -246,9 +225,9 @@ def generate_advanced_report(file_path, output_txt='Log_Analysis_Report.txt'):
         "2. SECURITY AUDIT",
         "---------------------",
         f"🔴 Critical Events:     {crit_count} events detected",
+        f"🟠 Warning Events:      {warn_count} events detected",
         f"🔐 Auth Failures:       {len(auth_fails)} failed login attempts",
         f"⚡ Root Activity:       {len(root_events)} sessions involving root user",
-        f"✅ Successful Logins:   {len(success_logins)} sessions established",
         "",
         "3. ACTIVITY ANALYSIS",
         "---------------------",

@@ -1,40 +1,58 @@
 ============================================================
-             AUTOMATED LOG ANALYSIS REPORT
+             ADVANCED LOG ANALYSIS REPORT
 ============================================================
-Generated: 2025-12-22 20:43
+Generated: 2025-12-23 00:20
 
 1. EXECUTIVE OVERVIEW
 ---------------------
-Analysis Period:      2024-Jan-01 04:02 to 2024-Dec-31 04:07
-Duration:             365 days 00:05:29
-Total Log Entries:    8902
-Unique Event Types:   56 distinct templates
+Analysis Period:      2024-Jun-14 15:16 to 2024-Jul-27 10:59
+Total Log Entries:    1820
+Health Status:        ✅ STABLE
 
-2. ACTIVITY ANALYSIS
+2. SECURITY AUDIT
 ---------------------
-Peak Activity Time:   Nov 05 (approx 195 events/day)
-Avg Event Rate:       1.0 events per hour
+🔴 Critical Events:     0 events detected
+🟠 Warning Events:      538 events detected
+🔐 Auth Failures:       490 failed login attempts
+⚡ Root Activity:       2 sessions involving root user
 
-3. CRITICAL BREAKDOWN (Top 3)
+3. ACTIVITY ANALYSIS
 ---------------------
-Top System Services (Components generating the most noise):
-  -> sshd(pam_unix) (3944, 44.3%); ftpd (3445, 38.7%); su(pam_unix) (944, 10.6%)
+Peak Activity Time:   Jul 17 (approx 186 events/day)
+Avg Event Rate:       1.8 events per hour
 
-Top Active Users (Accounts triggering the most events):
-  -> root (2290, 25.7%); unknown (1043, 11.7%); test (555, 6.2%)
+4. CRITICAL BREAKDOWN (Top 3)
+---------------------
+Top System Services:
+  -> ftpd (916, 50.3%); sshd(pam_unix) (677, 37.2%); su(pam_unix) (172, 9.5%)
 
-Top Remote Sources (External IPs connecting to the system):
-  -> 211.107.232.1 (241, 2.7%); 84.57.172.16, dslb-084-057-172-016.pools.arcor-ip.net (189, 2.1%); 211.72.151.162 (93, 1.0%)
+Top Active Users:
+  -> root (353, 19.4%); unknown (117, 6.4%); cyrus (86, 4.7%)
 
-4. EVENT DICTIONARY (Key for Chart 3)
+Top Remote Sources:
+  -> 150.183.249.110 (80, 4.4%); 203.101.45.59, dsl-Chn-static-059.45.101.203.touchtelindia.net (46, 2.5%); 207.30.238.8, host8.topspot.net (46, 2.5%)
+
+5. EVENT PATTERN DICTIONARY
 ------------------------------------
-Detailed meanings for the most frequent Template IDs shown in the graph:
+Definitions for the Top Event Templates:
 
-[Template 16]: At Jan  7 15:45:10, the server combo logged an authentication failure for user test, with user ID 0, process ID 29228, and orig...
-[Template 19]: At Jan  6 15:53:55, the server combo logged a connection from remote host 84.139.180.196, p548BB4C4.dip0.t-ipconnect.de (84.139...
-[Template 15]: At Jan  9 23:44:50, the server combo logged a connection attempt from remote host 84.232.2.50 by process ID 7043.
-[Template 14]: At Jan 10 10:12:58, the server combo executed a check pass operation for user unknown using process ID 8695 from thesshd(pam_un...
-[Template 8]: At Jan  1 04:02:05, on the server combo, asu(pam_unix) session for user cyrus was initiated with a status of opened, managed by...
-[Template 9]: At Jan  1 04:02:06, on the server combo, asu(pam_unix) session for user cyrus was recorded with a status of closed.
-[Template 55]: At Jan 29 09:27:47, the server combo processed a check pass for user unknown using process ID 3396.
-[Template 32]: At Feb 25 04:02:59, the server combo experienced an issue with the telnetd process, identified by process ID 6464, where the pe...
+[Template 10]: <TIMESTAMP> <HOSTNAME> ftpd[<PID>]: connection from <RHOST>
+
+[Template 3]: <TIMESTAMP> <HOSTNAME> sshd(pam_unix)[<PID>]: authentication failure;
+    logname= uid=<UID> euid=0 tty=NODEVssh ruser= rhost=<RHOST> user=<USERNAME>
+
+[Template 6]: <TIMESTAMP> <HOSTNAME> ftpd[<PID>]: connection from <RHOST> (<RHOST>)
+
+[Template 1]: <TIMESTAMP> <HOSTNAME> sshd(pam_unix)[<PID>]: authentication failure;
+    logname= uid=<UID> euid=0 tty=NODEVssh ruser= rhost=<RHOST>
+
+[Template 2]: <TIMESTAMP> <HOSTNAME> sshd(pam_unix)[<PID>]: check pass; user <USERNAME>
+
+[Template 5]: <TIMESTAMP> <HOSTNAME> su(pam_unix)[<PID>]: session <STATE> for user
+    <USERNAME>
+
+[Template 4]: <TIMESTAMP> <HOSTNAME> su(pam_unix)[<PID>]: session <STATE> for user
+    <USERNAME> by (uid=<UID>)
+
+[Template 7]: <TIMESTAMP> <HOSTNAME> sshd(pam_unix)[<PID>]: session <STATE> for user
+    <USERNAME> by (uid=<UID>)
