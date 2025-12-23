@@ -1,7 +1,7 @@
 ============================================================
              LOG ANALYSIS REPORT
 ============================================================
-Generated: 2025-12-23 01:31
+Generated: 2025-12-23 10:51
 
 1. EXECUTIVE OVERVIEW
 ---------------------
@@ -11,11 +11,11 @@ Health Status:        ✅ STABLE
 
 2. SECURITY AUDIT
 ---------------------
-🔴 Critical Events:     0
-🟠 Warning Events:      2
-🔐 Auth Failures:       490
-⚡ Root Activity:       2
-✅ Successful Logins:   122
+🔴 Critical Events:     0 events detected
+🟠 Warning Events:      2 events detected
+🔐 Auth Failures:       490 failed login attempts
+⚡ Root Activity:       2 sessions involving root user
+✅ Successful Logins:   122 sessions established
 
 3. ACTIVITY ANALYSIS
 ---------------------
@@ -25,8 +25,8 @@ Avg Event Rate:       1.8 events/hour
 4. CRITICAL BREAKDOWN
 ---------------------
 Top Services:    ftpd (916, 50.3%); sshd(pam_unix) (677, 37.2%); su(pam_unix) (172, 9.5%)
-Top Users:       root (353, 19.4%); unknown (117, 6.4%); cyrus (86, 4.7%)
-Top IPs:         150.183.249.110 (80, 4.4%); 203.101.45.59, dsl-Chn-static-059.45.101.203.touchtelindia.net (46, 2.5%); 207.30.238.8, host8.topspot.net (46, 2.5%)
+Top Users:       root (353, 19.4%); unknown (117, 6.4%); news (86, 4.7%)
+Top IPs:         150.183.249.110 (80, 4.4%); 207.30.238.8, host8.topspot.net (46, 2.5%); 203.101.45.59, dsl-Chn-static-059.45.101.203.touchtelindia.net (46, 2.5%)
 
 5. RISK EVENT HIGHLIGHTS (Strictly Critical/Warning)
 --------------------------------------------------
